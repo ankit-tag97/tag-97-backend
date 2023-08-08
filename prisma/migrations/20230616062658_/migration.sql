@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "role" ADD COLUMN     "created_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "deleted_at" TIMESTAMPTZ(6),
+ADD COLUMN     "updated_at" TIMESTAMPTZ(6);
