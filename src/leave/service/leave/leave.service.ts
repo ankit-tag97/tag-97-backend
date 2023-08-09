@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { ErrorStatusCode } from 'src/enum/enum';
 import { LeaveDto } from 'src/leave/dtos/leave.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -10,17 +9,12 @@ export class LeaveService {
 
     async create(data: Prisma.LeaveCreateInput) {
         try {
-            const leave = await this.prisma.leave.create({
+            const createLeave = await this.prisma.leave.create({
                 data
             })
-            return leave
-        } catch (error) {
-            if (error instanceof Prisma.PrismaClientKnownRequestError) {
-                if (error.code === ErrorStatusCode.P2Error) {
-                    return new HttpException('Something went wrong', HttpStatus.FORBIDDEN);
-                }
-            }
-            throw error;
+            return createLeave;
+        } catch {
+            throw new HttpException('Something went wrong', HttpStatus.BAD_GATEWAY);
         }
     }
 

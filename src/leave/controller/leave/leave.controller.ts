@@ -6,7 +6,7 @@ import { LeaveService } from 'src/leave/service/leave/leave.service';
 @Controller('leave')
 @UseFilters(IdExceptionFilter)
 export class LeaveController {
-    constructor(private leaveService: LeaveService) { }
+    constructor(private readonly leaveService: LeaveService) { }
 
     @Post('')
     createLeave(@Body() dto: LeaveDto) {

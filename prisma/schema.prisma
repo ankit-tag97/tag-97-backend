@@ -8,44 +8,44 @@ datasource db {
 }
 
 model Employees {
-  id                   String           @id @default(uuid())
-  employeeId           String?          @map("employee_id") @db.VarChar
-  createdAt            DateTime?        @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt            DateTime?        @updatedAt @map("updated_at") @db.Timestamptz(6)
-  deletedAt            DateTime?        @map("deleted_at") @db.Timestamptz(6)
-  isActive             Boolean?         @default(true)
-  version              Int?             @default(1)
-  firstName            String           @map("first_name") @db.VarChar()
-  lastName             String           @map("last_name") @db.VarChar()
-  dateOfEmployement    DateTime?        @map("date_of_employement") @db.Timestamptz(6)
-  dateOfBirth          DateTime         @map("date_of_birth") @db.Timestamp(6)
-  dateOfJoining        DateTime         @map("date_of_joining") @db.Timestamp(6)
-  phoneNumber          String           @map("phone_number") @db.VarChar()
-  alternatePhoneNumber String           @map("alternate_phone_number") @db.VarChar()
-  personalEmail        String           @unique @map("personal_email") @db.VarChar()
-  companyEmail         String?          @unique @map("company_email") @db.VarChar()
-  gender               String           @db.VarChar()
-  city                 String           @db.VarChar()
-  state                String           @db.VarChar()
-  street               String           @db.VarChar()
-  pincode              String           @db.VarChar()
-  profileImageUrl      String           @map("profile_image_url") @db.VarChar()
-  aadhar               String           @db.VarChar()
-  otherIdProof         String           @map("other_id_proof") @db.VarChar()
+  id                   String            @id @default(uuid())
+  employeeId           String?           @map("employee_id") @db.VarChar
+  createdAt            DateTime?         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime?         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt            DateTime?         @map("deleted_at") @db.Timestamptz(6)
+  version              Int?              @default(1)
+  firstName            String            @map("first_name") @db.VarChar
+  lastName             String            @map("last_name") @db.VarChar
+  dateOfEmployement    DateTime?         @map("date_of_employement") @db.Timestamptz(6)
+  dateOfBirth          DateTime          @map("date_of_birth") @db.Timestamp(6)
+  dateOfJoining        DateTime          @map("date_of_joining") @db.Timestamp(6)
+  phoneNumber          String            @map("phone_number") @db.VarChar
+  alternatePhoneNumber String            @map("alternate_phone_number") @db.VarChar
+  personalEmail        String            @unique @map("personal_email") @db.VarChar
+  companyEmail         String?           @unique @map("company_email") @db.VarChar
+  gender               String            @db.VarChar
+  city                 String            @db.VarChar
+  state                String            @db.VarChar
+  street               String            @db.VarChar
+  pincode              String            @db.VarChar
+  profileImageUrl      String            @map("profile_image_url") @db.VarChar
+  aadhar               String            @db.VarChar
+  otherIdProof         String            @map("other_id_proof") @db.VarChar
+  isActive             Boolean?          @default(true)
   password             String?
-  employeeRole         EmployeeRole[]
   employeeAsset        EmployeeAsset[]
-  EmployeeInvoce       EmployeeInvoce[]
+  employeeRole         EmployeeRole[]
+  EmployeeInvoce       EmployeeInvoice[]
 
   @@map("employees")
 }
 
 model Role {
   id           String         @id @default(uuid())
+  name         String         @unique @db.VarChar
   createdAt    DateTime?      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt    DateTime?      @map("deleted_at") @db.Timestamptz(6)
-  name         String         @unique @db.VarChar()
+  updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamptz(6)
   employeeRole EmployeeRole[]
 
   @@map("role")
@@ -54,8 +54,8 @@ model Role {
 model EmployeeRole {
   id          String    @id @default(uuid())
   employee_id String
-  employeeId  Employees @relation(fields: [employee_id], references: [id])
   role_id     String
+  employeeId  Employees @relation(fields: [employee_id], references: [id])
   roleId      Role      @relation(fields: [role_id], references: [id])
 
   @@map("employee_role")
@@ -64,14 +64,14 @@ model EmployeeRole {
 model Asset {
   id            String          @id @default(uuid())
   createdAt     DateTime?       @default(now()) @map("created_at") @db.Timestamptz(6)
-  deletedAt     DateTime?       @map("deleted_at") @db.Timestamptz(6)
   updatedAt     DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(6)
-  name          String          @db.VarChar()
-  modalNumber   Int             @map("modal_number") @db.Integer
+  name          String          @db.VarChar
+  modalNumber   Int             @map("modal_number")
   purchaseDate  DateTime?       @map("purchase_date") @db.Timestamptz(6)
-  description   String          @db.VarChar()
+  description   String          @db.VarChar
+  billNumber    Int?
+  deletedAt     DateTime?       @map("deleted_at") @db.Timestamptz(6)
   warranty      Int             @default(0)
-  billNumber    Int?            @db.Integer
   employeeAsset EmployeeAsset[]
 
   @@map("assets")
@@ -80,9 +80,9 @@ model Asset {
 model EmployeeAsset {
   id          String    @id @default(uuid())
   employee_id String
-  employeeId  Employees @relation(fields: [employee_id], references: [id])
   asset_id    String
   assetsId    Asset     @relation(fields: [asset_id], references: [id])
+  employeeId  Employees @relation(fields: [employee_id], references: [id])
 }
 
 model Clients {
@@ -90,41 +90,41 @@ model Clients {
   createdAt    DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt    DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt    DateTime? @map("deleted_at") @db.Timestamptz(6)
-  name         String    @db.VarChar()
-  alias        String    @db.VarChar()
+  name         String    @db.VarChar
+  alias        String    @db.VarChar
   invoiceColor String    @map("invoice_color")
-  phone        String    @db.VarChar()
-  email        String    @unique @db.VarChar()
-  address      String    @db.VarChar()
+  phone        String    @db.VarChar
+  email        String    @unique @db.VarChar
+  address      String    @db.VarChar
 
   @@map("clients")
 }
 
-model EmployeeInvoce {
+model EmployeeInvoice {
   id                String    @id @default(uuid())
   createdAt         DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt         DateTime? @map("deleted_at") @db.Timestamptz(6)
   employee_id       String
   employeeId        Employees @relation(fields: [employee_id], references: [id])
-  name              String    @db.VarChar()
-  email             String    @db.VarChar()
-  designation       String    @db.VarChar()
-  paymentDeu        DateTime  @db.Timestamptz(6)
-  location          String    @db.VarChar()
-  modeOfPayment     String    @map("mode_of_payment") @db.VarChar()
+  name              String    @db.VarChar
+  email             String    @db.VarChar
+  designation       String    @db.VarChar
+  location          String    @db.VarChar
+  modeOfPayment     String    @map("mode_of_payment") @db.VarChar
   basicSalary       Float     @default(0) @map("basic_salary")
-  overTime          Int       @default(0) @map("over_time") @db.Integer
-  paidLeave         Int       @default(0) @map("paid_leave") @db.Integer
+  overTime          Int       @default(0) @map("over_time")
+  paidLeave         Int       @default(0) @map("paid_leave")
   insentive         Float     @default(0)
   securityAmount    Float     @default(0) @map("security_amount")
   professionalTax   Float     @default(0) @map("professional_tax")
-  absent            Int       @default(0) @db.Integer
+  absent            Int       @default(0)
   advanceWithdrawal Float     @default(0) @map("advance_withdrawal")
   totalDeduction    Float     @default(0) @map("total_deduction")
-  description       String    @db.VarChar()
-  paymentTerms      Int       @default(0) @map("payment_term") @db.Integer
+  description       String    @db.VarChar
+  paymentTerms      Int       @default(0) @map("payment_term")
   totalAmountPaid   Float     @default(0) @map("total_amount_paid")
+  paymentDeu        DateTime  @db.Timestamptz(6)
 
   @@map("employees_invoce")
 }
@@ -134,12 +134,12 @@ model Leave {
   createdAt      DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt      DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt      DateTime? @map("deleted_at") @db.Timestamptz(6)
-  employeeId     String    @map("employee_id") @db.VarChar()
-  startDateTime  DateTime  @map("start_date_time") @db.Timestamptz(6)
-  endDateTime    DateTime  @map("end_date_time") @db.Timestamptz(6)
-  reasonForLeave String    @map("reason_for_leave") @db.VarChar()
-  note           String    @db.VarChar()
-  status         String    @db.VarChar()
+  employeeId     String    @map("employee_id")
+  startDateTime  DateTime  @map("start_date_time")
+  endDateTime    DateTime  @map("end_date_time")
+  reasonForLeave String    @map("reason_for_leave")
+  note           String
+  status         String
 
   @@map("leaves")
 }
