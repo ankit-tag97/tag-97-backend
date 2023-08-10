@@ -1,6 +1,5 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { EmployeeInvoice, Prisma } from '@prisma/client';
-import { ErrorStatusCode } from 'src/enum/enum';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -14,8 +13,22 @@ export class EmployeeInvoiceService {
             })
             return createEmployeeInvoice
         } catch (error) {
-            console.error('Error creating employee:', error);
-            throw new Error('Could not create employee');
+            throw new HttpException('could not create invoice', HttpStatus.CONFLICT)
         }
+    }
+
+    async getAllInvoice() {
+        const getAllInvoice = await this.prisma.employeeInvoice.findMany({
+            where: { deletedAt: null }
+        })
+        if (getAllInvoice) return getAllInvoice
+        throw new NotFoundException('Data Not Found')
+    }
+
+    async getById(id: string) {
+        const where = { deletedAt: null, id: id }
+        const getInvoiceById = await this.prisma.employeeInvoice.findFirst({ where: where })
+        if (getInvoiceById) return getInvoiceById
+        throw new NotFoundException(`Data with this id"${id} was not found`)
     }
 }

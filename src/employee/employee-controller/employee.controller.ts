@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -16,6 +17,7 @@ import { DataNotFoundException } from 'src/exception/dataNotFoundException';
 import { IdExceptionFilter } from 'src/exception/id-exception-filter';
 import { Employees } from '@prisma/client';
 import { LoginDto } from '../dto/login.dto';
+import { updateEmployeeId } from '../dto/updateEmployee.dto';
 
 @Controller('employees')
 @UseFilters(IdExceptionFilter)
@@ -59,17 +61,25 @@ export class EmployeeController {
   @Patch(':id')
   async updateEmployee(
     @Param('id') id: string,
-    @Body() updateEmployeeDto: EmployeesDto,
+    @Body() updateEmployeeDto: updateEmployeeId,
+  ) {
+    return await this.employeeService.updateEmployeeId(
+      id,
+      updateEmployeeDto,
+    );
+  }
+
+  @Patch('/updateDetail/:id')
+  async updateEmployeeDetail(
+    @Param('id') id: string,
+    @Body() employeeDetailDto: EmployeesDto,
   ) {
     try {
-      const updateEmployee = await this.employeeService.updateEmployee(
-        id,
-        updateEmployeeDto,
-      );
-      if (updateEmployee) return updateEmployee;
-      throw new DataNotFoundException();
+      const updateDetail = await this.employeeService.updateEmployeeDetails(id, employeeDetailDto)
+      if (updateDetail) return updateDetail
+      throw new DataNotFoundException()
     } catch {
-      throw new DataNotFoundException();
+      throw new NotFoundException(`Data with this id '${id}' was not found`)
     }
   }
 

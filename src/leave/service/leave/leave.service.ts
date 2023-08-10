@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class LeaveService {
     constructor(private prisma: PrismaService) { }
 
-    async create(data: Prisma.LeaveCreateInput) {
+    async create(data: Prisma.LeaveCreateManyInput) {
         try {
             const createLeave = await this.prisma.leave.create({
                 data
@@ -19,24 +19,29 @@ export class LeaveService {
     }
 
     getAllLeave() {
-        const getAll = this.prisma.leave.findMany()
+        const getAll = this.prisma.leave.findMany({ where: { deletedAt: null }, })
         if (!getAll) throw new NotFoundException('Data Not Found')
         return getAll;
     }
 
     getById(id: string) {
-        const getById = this.prisma.leave.findFirst({ where: { id: id } })
-        if (!getById) throw new NotFoundException(`data with this #${id} was not found`)
-        return getById;
+        const where = { id: id, deletedAt: null };
+        const getById = this.prisma.leave.findFirst({ where: where })
+        if (getById) return getById;
+        throw new NotFoundException(`data with this #${id} was not found`)
     }
 
-    updateLeave(id: string, dto: LeaveDto) {
-        const updat = this.prisma.leave.update({ where: { id: id }, data: dto })
-        if (!updat) throw new NotFoundException(`data with this #${id} was not foumd`)
-        return updat
+    updateLeave(id: string, data: Prisma.LeaveCreateManyInput) {
+        const update = this.prisma.leave.update({ where: { id: id }, data })
+        if (update) return update
+        throw new NotFoundException(`data with this #${id} was not foumd`)
     }
 
     deleteLeave(id: string) {
-        return this.prisma.leave.delete({ where: { id: id } })
+        const deleteLeave = { deletedAt: new Date() }
+        return this.prisma.leave.update({
+            where: { id: id },
+            data: deleteLeave
+        })
     }
 }

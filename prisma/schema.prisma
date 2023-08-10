@@ -9,7 +9,7 @@ datasource db {
 
 model Employees {
   id                   String            @id @default(uuid())
-  employeeId           String?           @map("employee_id") @db.VarChar
+  employeeId           String?           @unique @map("employee_id") @db.VarChar
   createdAt            DateTime?         @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt            DateTime?         @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt            DateTime?         @map("deleted_at") @db.Timestamptz(6)
@@ -36,6 +36,7 @@ model Employees {
   employeeAsset        EmployeeAsset[]
   employeeRole         EmployeeRole[]
   EmployeeInvoce       EmployeeInvoice[]
+  Leave                Leave[]
 
   @@map("employees")
 }
@@ -106,7 +107,7 @@ model EmployeeInvoice {
   updatedAt         DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt         DateTime? @map("deleted_at") @db.Timestamptz(6)
   employee_id       String
-  employeeId        Employees @relation(fields: [employee_id], references: [id])
+  employeeId        Employees @relation(fields: [employee_id], references: [employeeId])
   name              String    @db.VarChar
   email             String    @db.VarChar
   designation       String    @db.VarChar
@@ -134,7 +135,8 @@ model Leave {
   createdAt      DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt      DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt      DateTime? @map("deleted_at") @db.Timestamptz(6)
-  employeeId     String    @map("employee_id")
+  employee_id    String
+  employeeId     Employees @relation(fields: [employee_id], references: [employeeId])
   startDateTime  DateTime  @map("start_date_time")
   endDateTime    DateTime  @map("end_date_time")
   reasonForLeave String    @map("reason_for_leave")

@@ -7,6 +7,8 @@ export class EmployeeInvoiceDto extends Base {
     @IsNotEmpty()
     employeeId: string
 
+    employee_id: string
+
     @IsString()
     @IsNotEmpty()
     name: string

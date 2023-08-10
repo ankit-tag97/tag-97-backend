@@ -7,6 +7,8 @@ export class LeaveDto extends Base {
     @IsNotEmpty()
     employeeId: string
 
+    employee_id: string
+
     @IsDateString()
     startDateTime: Date
 

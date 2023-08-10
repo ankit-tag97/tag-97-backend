@@ -7,15 +7,18 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  UseFilters,
   ValidationPipe,
 } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { RoleDto } from './dto/role.dto';
 import { DataNotFoundException } from 'src/exception/dataNotFoundException';
+import { IdExceptionFilter } from 'src/exception/id-exception-filter';
 
 @Controller('role')
+@UseFilters(IdExceptionFilter)
 export class RoleController {
-  constructor(private roleService: RoleService) {}
+  constructor(private roleService: RoleService) { }
 
   @Post('/createRole')
   createRole(@Body(ValidationPipe) dto: RoleDto) {

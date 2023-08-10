@@ -10,12 +10,8 @@ import {
 } from 'class-validator';
 import { Base } from '../../interface/base';
 import { gender } from 'src/enum/enum';
-import { Transform } from 'class-transformer';
 
 export class EmployeesDto extends Base {
-  @IsString()
-  @IsOptional()
-  employeeId: string;
 
   @IsString()
   firstName: string;
