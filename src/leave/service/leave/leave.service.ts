@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { LeaveDto } from 'src/leave/dtos/leave.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()

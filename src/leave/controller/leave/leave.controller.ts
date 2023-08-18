@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, NotFoundException, Param, Patch, Post, UseFilters, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseFilters, ValidationPipe } from '@nestjs/common';
 import { Leave } from '@prisma/client';
 import { DataNotFoundException } from 'src/exception/dataNotFoundException';
 import { IdExceptionFilter } from 'src/exception/id-exception-filter';

@@ -1,5 +1,4 @@
-import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { EmployeeDesignation } from "src/enum/enum";
+import { IsDateString, IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Base } from "src/interface/base";
 
 export class EmployeeInvoiceDto extends Base {

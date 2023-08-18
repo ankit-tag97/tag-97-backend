@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { EmployeeInvoiceDto } from 'src/employee-invoice/dtos/employee-invoice.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -30,5 +31,20 @@ export class EmployeeInvoiceService {
         const getInvoiceById = await this.prisma.employeeInvoice.findFirst({ where: where })
         if (getInvoiceById) return getInvoiceById
         throw new NotFoundException(`Data with this id"${id} was not found`)
+    }
+
+    updateInvoice(id: string, dto: EmployeeInvoiceDto) {
+        return this.prisma.employeeInvoice.updateMany({
+            where: { id: id },
+            data: dto
+        })
+    }
+
+    deleteInvoice(id: string) {
+        const deleteInvoice = { deletedAt: new Date() }
+        return this.prisma.employeeInvoice.update({
+            where: { id: id },
+            data: deleteInvoice
+        })
     }
 }
