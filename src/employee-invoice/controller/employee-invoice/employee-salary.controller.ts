@@ -1,38 +1,38 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseFilters } from '@nestjs/common';
-import { EmployeeSalaryDto } from '../../dtos/employee-salary.dto';
-import { EmployeeSalaryService } from '../../service/employee-invoice/employee-salary.service';
+import { SalaryDto } from '../../dtos/employee-salary.dto';
+import { SalaryService } from '../../service/employee-invoice/employee-salary.service';
 import { DataNotFoundException } from '../../../exception/DataNotFoundException';
 import { IdExceptionFilter } from '../../../exception/id-exception-filter';
 
-@Controller('employee-salary')
-// @UseFilters(IdExceptionFilter)
-export class EmployeeSalaryController {
-    constructor(private readonly salaryService: EmployeeSalaryService) { }
+@Controller('salary')
+@UseFilters(IdExceptionFilter)
+export class SalaryController {
+    constructor(private readonly salaryService: SalaryService) { }
 
-    @Post('/create')
-    async createInvoice(@Body() data: EmployeeSalaryDto) {
+    @Post('/generate')
+    async generateSalary(@Body() data: SalaryDto) {
         console.log(data);
-        return this.salaryService.createInvoice(data)
+        return await this.salaryService.generateSalary(data)
     }
 
     @Get()
-    getAllInvoice() {
-        return this.salaryService.getAllInvoice()
+    getAllSalary() {
+        return this.salaryService.getAllSalary()
     }
 
     @Get(':id')
     async getById(@Param('id') id: string) {
-        const getInvoiceById = await this.salaryService.getById(id)
-        if (getInvoiceById) return getInvoiceById
+        const getSalaryById = await this.salaryService.getById(id)
+        if (getSalaryById) return getSalaryById
         throw new NotFoundException(`Data with this id "${id}" was not found`)
     }
 
     @Patch(':id')
-    async updateEmployeeInvoice(
+    async updateEmployeeSalary(
         @Param('id') id: string,
-        @Body() dto: EmployeeSalaryDto) {
+        @Body() dto: SalaryDto) {
         try {
-            const updateInvoice = await this.salaryService.updateInvoice(id, dto)
+            const updateInvoice = await this.salaryService.updateSalary(id, dto)
             if (updateInvoice) return updateInvoice
             throw new DataNotFoundException()
         } catch {
@@ -41,10 +41,10 @@ export class EmployeeSalaryController {
     }
 
     @Delete(':id')
-    async deleteEmployeeInvoice(@Param('id') id: string) {
+    async deleteSalary(@Param('id') id: string) {
         try {
-            const deleteInvoice = await this.salaryService.deleteInvoice(id)
-            if (deleteInvoice) return deleteInvoice
+            const deleteSalary = await this.salaryService.deleteSalary(id)
+            if (deleteSalary) return deleteSalary
             throw new DataNotFoundException()
         } catch {
             throw new NotFoundException(`Data with this id '${id}' was not found`)

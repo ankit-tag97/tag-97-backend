@@ -1,12 +1,10 @@
 import { IsDateString, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { Base } from "../../interface/base";
 
-export class EmployeeSalaryDto extends Base {
-  
-    employee_id: string
-
+export class SalaryDto extends Base {
     @IsString()
-    employeeId: string
+    @IsNotEmpty()
+    employee_id: string
 
     @IsString()
     @IsNotEmpty()

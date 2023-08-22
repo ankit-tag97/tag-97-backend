@@ -35,9 +35,9 @@ model Employees {
   password             String?
   employeeAsset        EmployeeAsset[]
   employeeRole         EmployeeRole[]
-  EmployeeInvoce       EmployeeSalarySlip[]
-  Leave                Leave[]
-  salary               salary[]
+  employeeSalary       EmployeeSalarySlip[]
+  leave                Leave[]
+  salary               Salary[]
 
   @@map("employees")
 }
@@ -107,8 +107,6 @@ model EmployeeSalarySlip {
   createdAt         DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt         DateTime? @map("deleted_at") @db.Timestamptz(6)
-  employee_id       String
-  employeeId        Employees @relation(fields: [employee_id], references: [employeeId])
   name              String    @db.VarChar
   email             String    @db.VarChar
   designation       String    @db.VarChar
@@ -126,19 +124,22 @@ model EmployeeSalarySlip {
   totalDeduction    Float     @default(0.00) @map("total_deduction")
   description       String    @db.VarChar
   netPay            Float?    @default(0.00) @map("net_pay")
+  employee_id       String
+  employeeId        Employees @relation(fields: [employee_id], references: [employeeId])
 
+  @@unique([employee_id, id])
   @@map("employee_salary_slip")
 }
 
-model salary {
+model Salary {
   id          String    @id @default(uuid())
   createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
-  employee_id String
-  employeeId  Employees @relation(fields: [employee_id], references: [employeeId])
   date        DateTime  @db.Timestamptz(6)
   salary      Float     @default(0.00)
+  employee_id String
+  employeeId  Employees @relation(fields: [employee_id], references: [employeeId])
 
   @@map("salary")
 }
@@ -148,13 +149,13 @@ model Leave {
   createdAt      DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt      DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt      DateTime? @map("deleted_at") @db.Timestamptz(6)
-  employee_id    String
-  employeeId     Employees @relation(fields: [employee_id], references: [employeeId])
   startDateTime  DateTime  @map("start_date_time")
   endDateTime    DateTime  @map("end_date_time")
   reasonForLeave String    @map("reason_for_leave")
   note           String
   status         String
+  employee_id    String
+  employeeId     Employees @relation(fields: [employee_id], references: [employeeId])
 
   @@map("leaves")
 }
