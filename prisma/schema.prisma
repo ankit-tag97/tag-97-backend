@@ -8,34 +8,34 @@ datasource db {
 }
 
 model Employees {
-  id                   String               @id @default(uuid())
-  employeeId           String?              @unique @map("employee_id")
-  createdAt            DateTime?            @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt            DateTime?            @updatedAt @map("updated_at") @db.Timestamptz(6)
-  deletedAt            DateTime?            @map("deleted_at") @db.Timestamptz(6)
-  version              Int?                 @default(1)
-  firstName            String               @map("first_name") @db.VarChar
-  lastName             String               @map("last_name") @db.VarChar
-  dateOfEmployement    DateTime?            @map("date_of_employement") @db.Timestamptz(6)
-  dateOfBirth          DateTime             @map("date_of_birth") @db.Timestamp(6)
-  dateOfJoining        DateTime             @map("date_of_joining") @db.Timestamp(6)
-  phoneNumber          String               @map("phone_number") @db.VarChar
-  alternatePhoneNumber String               @map("alternate_phone_number") @db.VarChar
-  personalEmail        String               @unique @map("personal_email") @db.VarChar
-  companyEmail         String?              @unique @map("company_email") @db.VarChar
-  gender               String               @db.VarChar
-  city                 String               @db.VarChar
-  state                String               @db.VarChar
-  street               String               @db.VarChar
-  pincode              String               @db.VarChar
-  profileImageUrl      String               @map("profile_image_url") @db.VarChar
-  aadhar               String               @db.VarChar
-  otherIdProof         String               @map("other_id_proof") @db.VarChar
-  isActive             Boolean?             @default(true)
+  id                   String          @id @default(uuid())
+  employeeId           String?         @unique @map("employee_id")
+  createdAt            DateTime?       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt            DateTime?       @map("deleted_at") @db.Timestamptz(6)
+  version              Int?            @default(1)
+  firstName            String          @map("first_name") @db.VarChar
+  lastName             String          @map("last_name") @db.VarChar
+  dateOfEmployement    DateTime?       @map("date_of_employement") @db.Timestamptz(6)
+  dateOfBirth          DateTime        @map("date_of_birth") @db.Timestamp(6)
+  dateOfJoining        DateTime        @map("date_of_joining") @db.Timestamp(6)
+  phoneNumber          String          @map("phone_number") @db.VarChar
+  alternatePhoneNumber String          @map("alternate_phone_number") @db.VarChar
+  personalEmail        String          @unique @map("personal_email") @db.VarChar
+  companyEmail         String?         @unique @map("company_email") @db.VarChar
+  gender               String          @db.VarChar
+  city                 String          @db.VarChar
+  state                String          @db.VarChar
+  street               String          @db.VarChar
+  pincode              String          @db.VarChar
+  profileImageUrl      String          @map("profile_image_url") @db.VarChar
+  aadhar               String          @db.VarChar
+  otherIdProof         String          @map("other_id_proof") @db.VarChar
+  isActive             Boolean?        @default(true)
   password             String?
   employeeAsset        EmployeeAsset[]
   employeeRole         EmployeeRole[]
-  employeeSalary       EmployeeSalarySlip[]
+  employeeSalary       SalarySlip[]
   leave                Leave[]
   salary               Salary[]
 
@@ -102,7 +102,7 @@ model Clients {
   @@map("clients")
 }
 
-model EmployeeSalarySlip {
+model SalarySlip {
   id                String    @id @default(uuid())
   createdAt         DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -110,25 +110,25 @@ model EmployeeSalarySlip {
   name              String    @db.VarChar
   email             String    @db.VarChar
   designation       String    @db.VarChar
-  salaryDate        DateTime  @map("salary_date")
+  salaryDate        DateTime  @unique @map("salary_date")
   location          String    @db.VarChar
   modeOfPayment     String    @map("mode_of_payment") @db.VarChar
   basicSalary       Float     @default(0.00) @map("basic_salary")
-  overTime          Int       @default(0) @map("over_time")
-  paidLeave         Int       @default(0) @map("paid_leave")
+  overTime          Float     @default(0.00) @map("over_time")
+  paidLeave         Float?    @default(0.00) @map("paid_leave")
   insentive         Float     @default(0.00)
   securityAmount    Float?    @default(0.00) @map("security_amount")
   professionalTax   Float     @default(0.00) @map("professional_tax")
-  absent            Int       @default(0)
+  absent            Float     @default(0.00)
   advanceWithdrawal Float     @default(0.00) @map("advance_withdrawal")
-  totalDeduction    Float     @default(0.00) @map("total_deduction")
+  totalDeduction    Float?    @default(0.00) @map("total_deduction")
   description       String    @db.VarChar
   netPay            Float?    @default(0.00) @map("net_pay")
   employee_id       String
-  employeeId        Employees @relation(fields: [employee_id], references: [employeeId])
+  employeeId        Employees @relation(fields: [employee_id], references: [id])
 
   @@unique([employee_id, id])
-  @@map("employee_salary_slip")
+  @@map("salary_slip")
 }
 
 model Salary {
@@ -139,7 +139,7 @@ model Salary {
   date        DateTime  @db.Timestamptz(6)
   salary      Float     @default(0.00)
   employee_id String
-  employeeId  Employees @relation(fields: [employee_id], references: [employeeId])
+  employeeId  Employees @relation(fields: [employee_id], references: [id])
 
   @@map("salary")
 }
@@ -155,7 +155,7 @@ model Leave {
   note           String
   status         String
   employee_id    String
-  employeeId     Employees @relation(fields: [employee_id], references: [employeeId])
+  employeeId     Employees @relation(fields: [employee_id], references: [id])
 
   @@map("leaves")
 }

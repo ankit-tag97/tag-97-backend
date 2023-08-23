@@ -1,16 +1,16 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { SalaryDto } from '../../dtos/employee-salary.dto';
+import { EmployeeSalaryDto } from '../../dtos/employee-salary.dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 
 @Injectable()
 export class SalaryService {
     constructor(private prisma: PrismaService) { }
 
-    async generateSalary(data: Prisma.EmployeeSalarySlipCreateManyInput) {
+    async generateSalary(data: Prisma.SalarySlipCreateManyInput): Promise<EmployeeSalaryDto> {
 
-        const year = new Date().getFullYear()
-        const month = new Date().getMonth() + 1
+        const year = new Date().getFullYear();
+        const month = new Date().getMonth() + 1;
 
         const startDate = new Date(year, month - 1, 1);
         const endDate = new Date(year, month, 0); // Last day of the month
@@ -23,15 +23,17 @@ export class SalaryService {
             }
         }
 
-        const hourlyRate = ((data.basicSalary / workingDays) / 9)  // calculate hourlyRate
+        const hourlyRate = ((data.basicSalary / workingDays) / 9)  // calculate hourly Rate
 
         const overTime = (data.overTime * hourlyRate)
         const absent = (data.absent * hourlyRate)
         const securityAmount = (data.securityAmount = data.basicSalary * 0.1)
-        const paidLeave = absent > 0 ? (data.basicSalary - (data.basicSalary / workingDays)) : data.basicSalary + (data.basicSalary / workingDays)
+
+        //Paid Leave
+        data.paidLeave = absent > 0 ? (data.netPay - (data.basicSalary / workingDays)) : data.netPay + (data.basicSalary / workingDays)
 
         const totalAmount = data.basicSalary + data.insentive + overTime - absent -
-            data.professionalTax - securityAmount - paidLeave - data.advanceWithdrawal
+            data.professionalTax - securityAmount - data.advanceWithdrawal
 
         console.log(totalAmount);
 
@@ -41,7 +43,7 @@ export class SalaryService {
         console.log(totalDeductionAmount)
 
         try {
-            const createEmployeeSalarySlip = await this.prisma.employeeSalarySlip.create({
+            const createEmployeeSalarySlip = await this.prisma.salarySlip.create({
                 data: {
                     ...data,
                     totalDeduction: totalDeductionAmount,
@@ -56,7 +58,7 @@ export class SalaryService {
     }
 
     async getAllSalary() {
-        const getAllSalary = await this.prisma.employeeSalarySlip.findMany({
+        const getAllSalary = await this.prisma.salarySlip.findMany({
             where: { deletedAt: null }
         })
         if (getAllSalary) return getAllSalary
@@ -65,13 +67,13 @@ export class SalaryService {
 
     async getById(id: string) {
         const where = { deletedAt: null, id: id }
-        const getSalaryById = await this.prisma.employeeSalarySlip.findFirst({ where: where })
+        const getSalaryById = await this.prisma.salarySlip.findFirst({ where: where })
         if (getSalaryById) return getSalaryById
         throw new NotFoundException(`Data with this id"${id} was not found`)
     }
 
-    updateSalary(id: string, dto: SalaryDto) {
-        return this.prisma.employeeSalarySlip.updateMany({
+    updateSalary(id: string, dto: EmployeeSalaryDto) {
+        return this.prisma.salarySlip.updateMany({
             where: { id: id },
             data: dto
         })
@@ -79,7 +81,7 @@ export class SalaryService {
 
     deleteSalary(id: string) {
         const deleteSalary = { deletedAt: new Date() }
-        return this.prisma.employeeSalarySlip.update({
+        return this.prisma.salarySlip.update({
             where: { id: id },
             data: deleteSalary
         })

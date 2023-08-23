@@ -1,7 +1,7 @@
 import { IsDateString, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { Base } from "../../interface/base";
 
-export class SalaryDto extends Base {
+export class EmployeeSalaryDto extends Base {
     @IsString()
     @IsNotEmpty()
     employee_id: string
@@ -34,6 +34,7 @@ export class SalaryDto extends Base {
     overTime: number
 
     @IsNumber()
+    @IsOptional()
     paidLeave: number
 
     @IsNumber()
@@ -52,13 +53,6 @@ export class SalaryDto extends Base {
     @IsNumber()
     advanceWithdrawal: number
 
-    @IsNumber()
-    totalDeduction: number
-
     @IsString()
     description: string
-
-    @IsNumber()
-    @IsOptional()
-    netpay: number
 }

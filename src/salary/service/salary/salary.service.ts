@@ -6,7 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class SalaryService {
     constructor(private prisma: PrismaService) { }
 
-    async create(data: Prisma.salaryCreateManyInput) {
+    async create(data: Prisma.SalaryCreateManyInput) {
         try {
             const createSalary = await this.prisma.salary.createMany({
                 data
@@ -32,7 +32,7 @@ export class SalaryService {
         throw new NotFoundException(`Data with this id"${id} was not found`)
     }
 
-    updateSalary(id: string, data: Prisma.salaryCreateManyInput) {
+    updateSalary(id: string, data: Prisma.SalaryCreateManyInput) {
         return this.prisma.salary.update({
             where: { id: id },
             data

@@ -1,17 +1,16 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseFilters } from '@nestjs/common';
-import { SalaryDto } from '../../dtos/employee-salary.dto';
+import { EmployeeSalaryDto } from '../../dtos/employee-salary.dto';
 import { SalaryService } from '../../service/employee-invoice/employee-salary.service';
 import { DataNotFoundException } from '../../../exception/DataNotFoundException';
 import { IdExceptionFilter } from '../../../exception/id-exception-filter';
 
-@Controller('salary')
+@Controller('EmployeeSalary')
 @UseFilters(IdExceptionFilter)
 export class SalaryController {
     constructor(private readonly salaryService: SalaryService) { }
 
     @Post('/generate')
-    async generateSalary(@Body() data: SalaryDto) {
-        console.log(data);
+    async generateSalary(@Body() data: EmployeeSalaryDto) {
         return await this.salaryService.generateSalary(data)
     }
 
@@ -30,7 +29,7 @@ export class SalaryController {
     @Patch(':id')
     async updateEmployeeSalary(
         @Param('id') id: string,
-        @Body() dto: SalaryDto) {
+        @Body() dto: EmployeeSalaryDto) {
         try {
             const updateInvoice = await this.salaryService.updateSalary(id, dto)
             if (updateInvoice) return updateInvoice
