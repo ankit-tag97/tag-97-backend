@@ -110,7 +110,7 @@ model SalarySlip {
   name              String    @db.VarChar
   email             String    @db.VarChar
   designation       String    @db.VarChar
-  salaryDate        DateTime  @unique @map("salary_date")
+  salaryDate        String    @map("salary_date")
   location          String    @db.VarChar
   modeOfPayment     String    @map("mode_of_payment") @db.VarChar
   basicSalary       Float     @default(0.00) @map("basic_salary")
@@ -125,9 +125,8 @@ model SalarySlip {
   description       String    @db.VarChar
   netPay            Float?    @default(0.00) @map("net_pay")
   employee_id       String
-  employeeId        Employees @relation(fields: [employee_id], references: [id])
+  employeeId          Employees @relation(fields: [employee_id], references: [id])
 
-  @@unique([employee_id, id])
   @@map("salary_slip")
 }
 

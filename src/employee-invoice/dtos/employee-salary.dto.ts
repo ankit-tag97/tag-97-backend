@@ -5,7 +5,7 @@ export class EmployeeSalaryDto extends Base {
     @IsString()
     @IsNotEmpty()
     employee_id: string
-
+ 
     @IsString()
     @IsNotEmpty()
     name: string
@@ -18,8 +18,7 @@ export class EmployeeSalaryDto extends Base {
     designation: string
 
     @IsString()
-    @IsDateString()
-    salaryDate: Date
+    salaryDate: string
 
     @IsString()
     location: string
