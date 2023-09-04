@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestj
 import { Prisma } from '@prisma/client';
 import { EmployeeSalaryDto } from '../../dtos/employee-salary.dto';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { error } from 'console';
 
 @Injectable()
 export class SalaryService {
@@ -29,24 +28,17 @@ export class SalaryService {
         const overTime = (data.overTime * hourlyRate)
         const absent = (data.absent * hourlyRate)
         const securityAmount = (data.securityAmount = data.basicSalary * 0.1)
-        console.log(absent);
 
         //Paid Leave
         const paidLeaveCalc = (data.paidLeave = (absent == 0 ? (data.basicSalary / workingDays) : absent))
-
-        // console.log(paidLeaveCalc);
 
         const netPay = (
             absent == 0 ? data.basicSalary + data.insentive + overTime - data.professionalTax - securityAmount - data.advanceWithdrawal + paidLeaveCalc
                 : data.basicSalary + data.insentive + overTime - data.professionalTax - securityAmount - data.advanceWithdrawal - paidLeaveCalc
         );
 
-        // console.log(netPay);
-
         const totalDeductionAmount = absent + data.professionalTax +
             securityAmount + data.advanceWithdrawal
-
-        // console.log(totalDeductionAmount)
 
         try {
             const createEmployeeSalarySlip = await this.prisma.salarySlip.create({
