@@ -22,11 +22,13 @@ export class SalaryService {
                 workingDays++;
             }
         }
+        
 
         const hourlyRate = ((data.basicSalary / workingDays) / 9)  // calculate hourly Rate
 
         const overTime = (data.overTime * hourlyRate)
-        const absent = (data.absent * hourlyRate)
+        const  absent = (data.absent * hourlyRate)
+        
         const securityAmount = (data.securityAmount = data.basicSalary * 0.1)
 
         //Paid Leave
@@ -34,8 +36,9 @@ export class SalaryService {
 
         const netPay = (
             absent == 0 ? data.basicSalary + data.insentive + overTime - data.professionalTax - securityAmount - data.advanceWithdrawal + paidLeaveCalc
-                : data.basicSalary + data.insentive + overTime - data.professionalTax - securityAmount - data.advanceWithdrawal - paidLeaveCalc
+                : data.basicSalary + data.insentive + overTime - data.professionalTax - securityAmount - data.advanceWithdrawal - paidLeaveCalc + (hourlyRate * 9)
         );
+        
 
         const totalDeductionAmount = absent + data.professionalTax +
             securityAmount + data.advanceWithdrawal
