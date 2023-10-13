@@ -1,13 +1,11 @@
-import { IsDateString, IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { Base } from "src/interface/base";
+import { IsDateString, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Base } from "../../interface/base";
 
-export class EmployeeInvoiceDto extends Base {
+export class EmployeeSalaryDto extends Base {
     @IsString()
     @IsNotEmpty()
-    employeeId: string
-
     employee_id: string
-
+ 
     @IsString()
     @IsNotEmpty()
     name: string
@@ -20,8 +18,7 @@ export class EmployeeInvoiceDto extends Base {
     designation: string
 
     @IsString()
-    @IsDateString()
-    paymentDeu: Date
+    salaryDate: string
 
     @IsString()
     location: string
@@ -36,12 +33,14 @@ export class EmployeeInvoiceDto extends Base {
     overTime: number
 
     @IsNumber()
+    @IsOptional()
     paidLeave: number
 
     @IsNumber()
     insentive: number
 
     @IsNumber()
+    @IsOptional()
     securityAmount: number
 
     @IsNumber()
@@ -53,15 +52,6 @@ export class EmployeeInvoiceDto extends Base {
     @IsNumber()
     advanceWithdrawal: number
 
-    @IsNumber()
-    totalDeduction: number
-
     @IsString()
     description: string
-
-    @IsNumber()
-    paymentTerms: number
-
-    @IsNumber()
-    totalAmountPaid: number
 }
